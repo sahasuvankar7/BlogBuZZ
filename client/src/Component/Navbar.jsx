@@ -26,7 +26,7 @@ const Navbar = () => {
 
   return (
     <div
-      className={`flex justify-between items-center ${
+      className={` flex justify-between items-center ${
         isScrolling
           ? "fixed bg-white w-full shadow-lg top-0 px-10 py-5"
           : "px-10 py-7"
