@@ -1,39 +1,11 @@
 // Modal.js
 
-import React, { useState,useEffect } from "react";
+import React, { useState, useEffect } from "react";
 
 const Modal = ({ isOpen, toggleModal, isScrolling }) => {
-  //   const [isOpen, setIsOpen] = useState(false);
-
-  //   const toggleModal = () => {
-  //     setIsOpen(!isOpen);
-  //   };
-  console.log(isScrolling);
-  const [isSmallScreen, setIsSmallScreen] = useState(false);
-
-  useEffect(() => {
-    const resizeListener = () => {
-      // Check the window width
-      const isSmall = window.innerWidth < 768; // Example threshold for small screens
-      setIsSmallScreen(isSmall);
-    };
-
-    // Add event listener for window resize
-    window.addEventListener("resize", resizeListener);
-
-    // Cleanup function to remove event listener
-    return () => {
-      window.removeEventListener("resize", resizeListener);
-    };
-  }, []); // Empty dependency array to run effect only once
-
   return (
     <div className="">
-      {isSmallScreen?(
-        <div></div>
-      ):(
-        <div>
- {isOpen && (
+      {isOpen && (
         <div
           className={`${
             !isScrolling
@@ -53,12 +25,6 @@ const Modal = ({ isOpen, toggleModal, isScrolling }) => {
           </div>
         </div>
       )}
-        </div>
-      )}
-      {/* <button onClick={toggleModal} className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
-        Open Modal
-      </button> */}
-     
     </div>
   );
 };
