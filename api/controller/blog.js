@@ -4,7 +4,10 @@ const bcrypt = require("bcrypt");
 const saltRounds = 10;
 const secret = "adfj3k3r383j389jdsfjj383";
 
+
 const User = model.User;
+
+
 
 exports.createAccount = async (req, res) => {
   const { name, email, password } = req.body;
@@ -57,3 +60,8 @@ exports.retrieveAccount = async (req, res) => {
     res.status(500).json({ message: "internal server error" });
   }
 };
+
+// implementing user profile 
+exports.userProfile = async (req,res)=>{
+  res.json(req.cookie);
+}

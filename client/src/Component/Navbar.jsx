@@ -8,7 +8,7 @@ const Navbar = () => {
 
   useEffect(() => {
     const scrollListener = () => {
-      if (window.scrollY > 100) {
+      if (window.scrollY > 90) {
         setIsScrolling(true);
       } else {
         setIsScrolling(false);

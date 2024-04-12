@@ -1,6 +1,12 @@
-import React from "react";
+import axios from "axios";
+import React, { useEffect } from "react";
 
 const Home = () => {
+  useEffect(()=>{
+    axios.get('http://localhost:8080/api/profile',{
+      credentials: "include",
+    })
+  })
   return (
     <div className="min-h-screen w-full my-10">
       <div className="w-5/6 mx-auto ">
