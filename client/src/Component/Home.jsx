@@ -4,7 +4,7 @@ const Home = () => {
   return (
     <div className="min-h-screen w-full my-10">
       <div className="w-5/6 mx-auto ">
-        <div className="grid grid-cols-3 gap-6">
+        <div className="md:grid-cols-2 sm:grid sm:grid-cols-1 lg:grid-cols-3 md:gap-6">
           <div className="max-w-md bg-white border border-gray-200 rounded-lg shadow-lg">
             <a href="#">
               <img
