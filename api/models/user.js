@@ -1,3 +1,4 @@
+require('dotenv').config();
 const mongoose = require("mongoose");
 // mongoose.connect("mongodb://localhost:27017/blog", {
 //   useNewUrlParser: true,
@@ -6,7 +7,7 @@ const mongoose = require("mongoose");
 main().catch((err) => console.log(err));
 async function main() {
   await mongoose.connect(
-    "mongodb+srv://suvankarsaha084:SLKI9vT2UeUWlgry@cluster0.pcddywr.mongodb.net/blog?retryWrites=true&w=majority&appName=Cluster0"
+    process.env.MONGO_URL
   );
   console.log("db connected");
 }

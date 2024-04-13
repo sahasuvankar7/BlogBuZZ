@@ -4,10 +4,7 @@ const bcrypt = require("bcrypt");
 const saltRounds = 10;
 const secret = "adfj3k3r383j389jdsfjj383";
 
-
 const User = model.User;
-
-
 
 exports.createAccount = async (req, res) => {
   const { name, email, password } = req.body;
@@ -17,12 +14,17 @@ exports.createAccount = async (req, res) => {
 
   try {
     const newuser = new User({ name, email, password: hash });
-    await newuser
-      .save()
-      .then(() => console.log("successfully logged in"))
-      .catch((err) => console.error("something went wrong"));
+    const existingEmail = await User.findOne({ email: email });
+    if (existingEmail) {
+      res.status(200).json({ message: "account already created" });
+    } else {
+      await newuser
+        .save()
+        .then(() => console.log("successfully logged in"))
+        .catch((err) => console.error("something went wrong"));
 
-    res.status(201).json({ message: "succesfully" });
+      res.status(201).json({ message: "succesfully" });
+    }
   } catch (err) {
     console.err(err);
     res.status(500).json({ message: "internal server error" });
@@ -48,7 +50,7 @@ exports.retrieveAccount = async (req, res) => {
           if (err) throw err;
           res.cookie("token", token).json("ok");
         });
-        // res.status(201).json({"userid":user._id});
+        res.status(201).json({ username: user.name, User_Email: user.email });
       } else {
         res.status(401).json({ message: "invalid password or email" });
       }
@@ -61,7 +63,7 @@ exports.retrieveAccount = async (req, res) => {
   }
 };
 
-// implementing user profile 
-exports.userProfile = async (req,res)=>{
+// implementing user profile
+exports.userProfile = async (req, res) => {
   res.json(req.cookie);
-}
+};

@@ -1,11 +1,17 @@
 import React from "react";
 import { useState } from "react";
 import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import { useToast } from "@chakra-ui/react";
+
 const Register = () => {
+  const navigate = useNavigate();
   const [regEmail, setRegEmail] = useState("Example@gmail.com");
   const [regPassword, setRegPassword] = useState(123);
-  const [regName , setRegName] = useState("john Doe");
+  const [regName, setRegName] = useState("john Doe");
+
+  const toast = useToast();
 
   //creating account
 
@@ -13,11 +19,32 @@ const Register = () => {
     e.preventDefault();
     try {
       const response = await axios.post("http://localhost:8080/api/register", {
-        name:regName,
+        name: regName,
         email: regEmail,
         password: regPassword,
       });
-      console.log(response.data);
+      if (response.status === 201) {
+        toast({
+          title: "User created successfully",
+          status: "success",
+          duration: 9000,
+          isClosable: true,
+          position: "top-right",
+        });
+        navigate("/");
+      } else if (response.status === 200) {
+        toast({
+          title: "Account has already been created",
+          status: "error",
+          duration: 9000,
+          isClosable: true,
+          position: "top-right",
+        });
+        
+        // setTimeout(() => {
+        //   window.location.reload();
+        // }, 5000);
+      }
     } catch (err) {
       console.error(err);
     }
@@ -34,7 +61,7 @@ const Register = () => {
               Create and account
             </h1>
             <form className="space-y-4 md:space-y-6" action="#">
-            <div>
+              <div>
                 <label
                   htmlFor="text"
                   className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
@@ -76,7 +103,6 @@ const Register = () => {
                   Password
                 </label>
                 <input
-                 
                   type="password"
                   name="password"
                   id="password"
@@ -86,7 +112,6 @@ const Register = () => {
                   onChange={(e) => setRegPassword(e.target.value)}
                 />
               </div>
-             
 
               <button
                 onClick={(e) => createAccount(e)}

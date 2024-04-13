@@ -1,13 +1,14 @@
 import React from "react";
-import { useState } from "react";
+import { useState, useContext } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { useToast } from "@chakra-ui/react";
+import { MyContext } from "../Context/MyContext";
 
 const Login = () => {
+  const { setLoggedInUser } = useContext(MyContext);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  // const [redirect, setRedirect] = useState(false);
   const navigate = useNavigate();
   const toast = useToast();
 
@@ -21,15 +22,27 @@ const Login = () => {
         password: password,
         credentials: "include",
       });
-      console.log(response.data);
-      if (response.data === "ok") {
+      // console.log(
+      //   response.data.username,
+      //   response.data.User_Email + "motherfucker"
+      // );
+
+      const loggedInUserData = {
+        name: response.data.username,
+        email: response.data.User_Email,
+      };
+      // setting the name and email after logged in
+
+      setLoggedInUser(loggedInUserData);
+
+      if (response.data === "ok" || response.status === 201) {
         // setRedirect(true);
         toast({
           title: "Login Successfully",
           status: "success",
           duration: 9000,
           isClosable: true,
-          position: "bottom-right",
+          position: "top-right",
         });
         navigate("/");
       } else {
@@ -43,11 +56,6 @@ const Login = () => {
         });
       }
 
-      // if (redirect) {
-      //   navigate("/");
-
-      // }
-      // console.log(response);
     } catch (err) {
       toast({
         title: "Something went wrong",

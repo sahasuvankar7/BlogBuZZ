@@ -6,9 +6,9 @@ import Footer from "./Footer";
 const Layout = () => {
   return (
     <div className="bg-gray-200 min-h-screen">
-      <Navbar />
-      <Outlet />
-      <Footer />
+        <Navbar />
+        <Outlet />
+        <Footer />
     </div>
   );
 };

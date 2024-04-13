@@ -66,7 +66,7 @@ const Navbar = () => {
         </ul>
       </div>
       <div className="right-col flex justify-end">
-        <button
+        <div
           onClick={toggleModal}
           className="flex items-center px-4 py-2 rounded-full text-black text-bold border-[1px] border-gray-600 transition duration-300 hover:bg-gray-100 hover:shadow-lg"
         >
@@ -90,7 +90,7 @@ const Navbar = () => {
             toggleModal={toggleModal}
             isScrolling={isScrolling}
           />
-        </button>
+        </div>
       </div>
     </div>
   );
