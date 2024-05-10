@@ -5,13 +5,11 @@ import Layout from "./Component/Layout.jsx";
 import Homepost from "./Component/Home.jsx";
 import Register from "./Component/Register.jsx";
 import Login from "./Component/Login.jsx";
-import { MyContext } from "./Context/MyContext.js";
+import Account from "./Component/Account.jsx"
+import { MyContext, UseContextProvider } from "./Context/MyContext.jsx";
 
 const App = () => {
-    const [loggedInUser, setLoggedInUser] = useState({
-      name:"",
-      email:"",
-    });
+ 
 
   const router = createBrowserRouter([
     {
@@ -30,17 +28,22 @@ const App = () => {
           path: "login",
           element: <Login />,
         },
+        {
+          path:"account",
+          element:<Account/>
+        }
       ],
     },
   ]);
 
   return (
     <React.StrictMode>
-      <MyContext.Provider value={{loggedInUser,setLoggedInUser}}>
+      <UseContextProvider>
         <ChakraProvider>
           <RouterProvider router={router} />
         </ChakraProvider>
-      </MyContext.Provider>
+      </UseContextProvider>
+    
     </React.StrictMode>
   );
 };

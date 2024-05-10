@@ -1,4 +1,4 @@
-require('dotenv').config();
+require("dotenv").config();
 const mongoose = require("mongoose");
 // mongoose.connect("mongodb://localhost:27017/blog", {
 //   useNewUrlParser: true,
@@ -6,9 +6,7 @@ const mongoose = require("mongoose");
 // });
 main().catch((err) => console.log(err));
 async function main() {
-  await mongoose.connect(
-    process.env.MONGO_URL
-  );
+  await mongoose.connect(process.env.MONGO_URL);
   console.log("db connected");
 }
 const userSchema = new mongoose.Schema({

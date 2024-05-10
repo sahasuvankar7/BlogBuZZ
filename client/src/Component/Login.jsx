@@ -4,9 +4,13 @@ import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { useToast } from "@chakra-ui/react";
 import { MyContext } from "../Context/MyContext";
+import Cookies from "universal-cookie";
 
 const Login = () => {
-  const { setLoggedInUser } = useContext(MyContext);
+  const cookies = new Cookies();
+  const expiryTime = 2 * 60 * 1000;
+  const expiryTimeStamp = new Date().getTime() + expiryTime;
+  const { setUser } = useContext(MyContext);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
@@ -17,26 +21,45 @@ const Login = () => {
   const loginAccount = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post("http://localhost:8080/api/login", {
-        email: email,
-        password: password,
-        credentials: "include",
-      });
-      // console.log(
-      //   response.data.username,
-      //   response.data.User_Email + "motherfucker"
-      // );
+      const response = await axios.post(
+        `http://localhost:8080/api/login`,
+        { email, password },
+        {
+          headers: {
+            Accept: "application/json",
+            "Content-Type": "application/json",
+          },
+          mode: "cors",
+          credentials:true,
+        }
+      );
+      console.log(response.data);
+
+      // getting the token part from backend
+    
 
       const loggedInUserData = {
-        name: response.data.username,
+        name: response.data.name,
         email: response.data.User_Email,
+        message: response.data.message,
+        
       };
       // setting the name and email after logged in
 
-      setLoggedInUser(loggedInUserData);
+      setUser(loggedInUserData);
 
-      if (response.data === "ok" || response.status === 201) {
+
+      if (response.status === 200) {
+        // document.cookie = `token=${token}; path=/`;
         // setRedirect(true);
+      
+        // storing the token to local storage
+        localStorage.setItem("jwtToken", response.data.token);
+        setTimeout(() => {
+          localStorage.removeItem("jwtToken");
+          window.location.reload();
+        }, 1 * 60 * 1000);
+
         toast({
           title: "Login Successfully",
           status: "success",
@@ -55,7 +78,6 @@ const Login = () => {
           position: "bottom-right",
         });
       }
-
     } catch (err) {
       toast({
         title: "Something went wrong",
@@ -70,70 +92,50 @@ const Login = () => {
   };
 
   return (
-    <section className="text-left">
-      <div className="flex flex-col items-center justify-center px-6 py-8 mx-auto lg:py-0">
-        <div className="w-full bg-white rounded-lg shadow dark:border md:mt-0 sm:max-w-md xl:p-0 dark:bg-gray-800 dark:border-gray-700">
-          <div className="p-6 space-y-4 md:space-y-6 sm:p-8  rounded-md shadow-xl">
-            <h1 className="text-xl font-bold leading-tight tracking-tight text-gray-900 md:text-2xl dark:text-white">
-              Sign in to your account
-            </h1>
-            <form className="space-y-4 md:space-y-6" action="#">
-              <div>
-                <label
-                  htmlFor="email"
-                  className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-                >
-                  Your email
-                </label>
-                <input
-                  type="email"
-                  name="email"
-                  id="email"
-                  value={email}
-                  className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                  placeholder="name@company.com"
-                  required
-                  onChange={(e) => setEmail(e.target.value)}
-                />
-              </div>
-              <div>
-                <label
-                  htmlFor="password"
-                  className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-                >
-                  Password
-                </label>
-                <input
-                  type="password"
-                  name="password"
-                  id="password"
-                  placeholder="••••••••"
-                  className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                  required
-                  onChange={(e) => setPassword(e.target.value)}
-                />
-              </div>
-              <button
-                type="submit"
-                className="w-full bg-blue-600 text-white hover:bg-blue-700 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800"
-                onClick={(e) => loginAccount(e)}
-              >
-                Sign in
-              </button>
-              <p className="text-sm font-light text-gray-500 dark:text-gray-400">
-                Don’t have an account yet?{" "}
-                <Link
-                  to="/register"
-                  className="font-medium text-primary-600 hover:underline dark:text-primary-500"
-                >
-                  Sign up
-                </Link>
-              </p>
-            </form>
-          </div>
+    <section className="min-h-screen">
+    <div>
+      <div>
+        <div className="flex justify-center mt-28 md:mt-20">
+          <form className="">
+          <h1 className="text-2xl font-bold w-full text-center">Sign in to your account</h1>
+            <div>
+              {/* <label htmlFor="email">Your email</label> */}
+              <input
+                type="email"
+                name="email"
+                id="email"
+                value={email}
+                placeholder="Email"
+                required
+                onChange={(e) => setEmail(e.target.value)}
+                className="border-2 border-black mt-5 px-8 py-3 rounded-sm text-lg  w-full"
+              />
+            </div>
+            <div>
+              {/* <label htmlFor="password">Password</label> */}
+              <input
+                type="password"
+                name="password"
+                id="password"
+                placeholder="Password"
+                required
+                onChange={(e) => setPassword(e.target.value)}
+                className="border-2 border-black mt-5 px-8 py-3 rounded-sm text-lg mx-auto w-full"
+              />
+            </div>
+            <button type="submit" onClick={(e) => loginAccount(e)}
+            className="bg-gray-950 text-white w-full mt-5 py-4 text-xl font-bold rounded-md hover:bg-gray-900 cursor-pointer"
+            >Sign in</button>
+            <p className="mt-4 text-lg font-semibold">
+              Don’t have an account yet?{" "}
+              <Link to="/register" className="font-bold text-blue-800">Sign up</Link>
+            </p>
+          </form>
         </div>
       </div>
-    </section>
+    </div>
+  </section>
+  
   );
 };
 

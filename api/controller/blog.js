@@ -1,10 +1,13 @@
 const model = require("../models/user");
 const jwt = require("jsonwebtoken");
+
 const bcrypt = require("bcrypt");
 const saltRounds = 10;
 const secret = "adfj3k3r383j389jdsfjj383";
 
 const User = model.User;
+
+//REGISTER
 
 exports.createAccount = async (req, res) => {
   const { name, email, password } = req.body;
@@ -31,39 +34,78 @@ exports.createAccount = async (req, res) => {
   }
 };
 
-// login
+// LOGIN
 
 exports.retrieveAccount = async (req, res) => {
   const { email, password } = req.body;
   try {
     // finding user
     const user = await User.findOne({ email: email });
-
     // if user is valid
-    if (user) {
-      const passOk = await bcrypt.compare(password, user.password);
-
-      // if the password is correct
-      if (passOk) {
-        // jwt pattern follow this link : https://www.npmjs.com/package/jsonwebtoken
-        jwt.sign({ email, id: user._id }, secret, {}, (err, token) => {
-          if (err) throw err;
-          res.cookie("token", token).json("ok");
-        });
-        res.status(201).json({ username: user.name, User_Email: user.email });
-      } else {
-        res.status(401).json({ message: "invalid password or email" });
-      }
-    } else {
-      res.status(404).json({ message: "account not found" });
+    if (!user) {
+      return res.status(404).json("user not found");
     }
+    const passOk = await bcrypt.compare(req.body.password, user.password);
+    // if the password is correct
+    if (!passOk) {
+      return res.status(401).json("invalid credentials");
+    }
+    // jwt pattern follow this link : https://www.npmjs.com/package/jsonwebtoken
+    const token = jwt.sign(
+      { id: user._id, name: user.name, email: user.email },
+      secret,
+      {
+        expiresIn: "2m",
+      }
+    );
+    const { password, ...info } = user._doc;
+    console.log("hello");
+    res
+      .cookie("jwttoken", token, {
+        httpOnly: true,
+        // secure: true,
+        // sameSite: "none",
+      })
+      .status(200)
+      .json({
+        token: token,
+        name: user.name,
+        User_Email: user.email,
+        message: "ok",
+      });
+
+    // res.cookie("jwtToken", token).status(200).json(info);
+    // console.log(res.cookies);
   } catch (err) {
     console.error(err);
     res.status(500).json({ message: "internal server error" });
   }
 };
 
-// implementing user profile
-exports.userProfile = async (req, res) => {
-  res.json(req.cookie);
+// LOGOUT
+exports.userLogout = async (req, res) => {
+  try {
+    res
+      .clearCookie("jwtToken", { sameSite: "none", secure: true })
+      .status(200)
+      .send("user logout successfully");
+  } catch {
+    res.status(500).json(err);
+  }
+};
+
+// Fetching DATA
+exports.refetch =  (req, res) => {
+const token = req.query.token;
+  console.log(token);
+  if(token){
+    jwt.verify(token, secret, (err, data) => {
+     if (err) {
+       res.status(403).json(err);
+     }
+     res.status(200).json(data);
+   });
+  }else {
+    res.status(400).json({ message: "needs to login first" });
+  }
 };

@@ -1,14 +1,17 @@
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import Modal from "./modal/Modal";
+import axios from "axios";
 
 const Navbar = () => {
   const [isOpenModal, setIsOpen] = useState(false);
   const [isScrolling, setIsScrolling] = useState(false);
 
+
+
   useEffect(() => {
     const scrollListener = () => {
-      if (window.scrollY > 90) {
+      if (window.scrollY > 100) {
         setIsScrolling(true);
       } else {
         setIsScrolling(false);
@@ -26,18 +29,18 @@ const Navbar = () => {
 
   return (
     <div
-      className={` flex justify-between items-center ${
+      className={` flex justify-between items-center border-[0.2px] border-gray-500 shadow-md ${
         isScrolling
           ? "fixed bg-white w-full shadow-lg top-0 px-10 py-5"
           : "px-10 py-7"
       } text-gray-900 transition-all translate-x-2 duration-200`}
     >
       <div className="left-col">
-        <p className="text-2xl font-bold font-mono">
+        <p className="text-2xl font-bold font-mono lg:ml-20">
           <Link to="/">BlogBuZZ</Link>
         </p>
       </div>
-      <div className="middle-col hidden md:block text-white px-8 py-3 rounded-full border-[1px] bg-gradient-to-r from-green-400 to-blue-500">
+      {/* <div className="middle-col hidden md:block text-white px-8 py-3 rounded-full border-[1px] bg-gradient-to-r from-green-400 to-blue-500">
         <ul className="flex gap-10">
           <li>
             <Link
@@ -64,11 +67,11 @@ const Navbar = () => {
             </Link>
           </li>
         </ul>
-      </div>
+      </div> */}
       <div className="right-col flex justify-end">
         <div
           onClick={toggleModal}
-          className="flex items-center px-4 py-2 rounded-full text-black text-bold border-[1px] border-gray-600 transition duration-300 hover:bg-gray-100 hover:shadow-lg"
+          className="flex items-center px-4 py-2 rounded-full text-black text-bold border-[1px] border-gray-600 transition duration-300 hover:bg-gray-100 hover:shadow-lg lg:mr-20"
         >
           <div>
             <div className="w-6 h-1 bg-black mb-1 rounded-md"></div>
