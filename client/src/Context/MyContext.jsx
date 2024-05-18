@@ -27,9 +27,9 @@ export function UseContextProvider({ children }) {
           credentials: "include",
         }
       );
-    
+
       setUser(res.data);
-      console.log(res.data);
+      // console.log(res.data);
     } catch (err) {
       console.log(err);
     }

@@ -6,15 +6,26 @@ import React, { useState, useEffect } from "react";
 import { useContext } from "react";
 import { MyContext } from "../../Context/MyContext";
 import Cookies from "universal-cookie";
+import { useNavigate } from "react-router-dom";
 
 const Modal = ({ isOpen, toggleModal, isScrolling }) => {
-  const { user } = useContext(MyContext);
-  const cookies = new Cookies();;
+  const { user, setUser } = useContext(MyContext);
+  const cookies = new Cookies();
+  const navigate = useNavigate();
 
   // getting the username from cookie(localhost)
   // const  user = cookies.get('userData');
 
-  console.log(user);
+  // console.log(user);
+
+  // logout functionality
+
+  const logout = () => {
+    localStorage.removeItem("jwtToken");
+    setUser(null);
+    window.location.reload();
+    navigate("/");
+  };
 
   return (
     <div className="">
@@ -30,16 +41,19 @@ const Modal = ({ isOpen, toggleModal, isScrolling }) => {
             <Link to="/">
               <button className="text-xl font-semibold mb-5">Home</button>
             </Link>
-            {(user.message === "ok" || user.name) ? (
+            {user?.message === "ok" || user?.name ? (
               <>
                 <Link to="/account">
                   <button className="text-xl font-semibold mb-5">
                     Account
                   </button>
                 </Link>
-                <Link to="/logout">
-                  <button className="text-xl font-semibold mb-5">
-                    Sign out
+                <Link to="/">
+                  <button
+                    className="text-xl font-semibold mb-5"
+                    onClick={logout}
+                  >
+                    Logout
                   </button>
                 </Link>
               </>
@@ -50,7 +64,7 @@ const Modal = ({ isOpen, toggleModal, isScrolling }) => {
                 </Link>
                 <Link to="/register">
                   <button className="text-xl font-semibold mb-5">
-                    Sign up
+                    Register
                   </button>
                 </Link>
               </>

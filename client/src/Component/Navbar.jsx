@@ -29,7 +29,7 @@ const Navbar = () => {
 
   return (
     <div
-      className={` flex justify-between items-center border-[0.2px] border-gray-500 shadow-md ${
+      className={` flex justify-between items-center border-[0.2px] border-gray-500 shadow-md z-50 ${
         isScrolling
           ? "fixed bg-white w-full shadow-lg top-0 px-10 py-5"
           : "px-10 py-7"

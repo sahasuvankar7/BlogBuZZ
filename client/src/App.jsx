@@ -5,12 +5,12 @@ import Layout from "./Component/Layout.jsx";
 import Homepost from "./Component/Home.jsx";
 import Register from "./Component/Register.jsx";
 import Login from "./Component/Login.jsx";
-import Account from "./Component/Account.jsx"
+import Account from "./Component/Account.jsx";
+import CreatePost from "./Component/CreatePost.jsx";
+import UpdatePost from "./Component/UpdatePost.jsx";
 import { MyContext, UseContextProvider } from "./Context/MyContext.jsx";
 
 const App = () => {
- 
-
   const router = createBrowserRouter([
     {
       path: "/",
@@ -29,9 +29,17 @@ const App = () => {
           element: <Login />,
         },
         {
-          path:"account",
-          element:<Account/>
-        }
+          path: "account",
+          element: <Account />,
+        },
+        {
+          path: "create",
+          element: <CreatePost />,
+        },
+        {
+          path: "update",
+          element: <UpdatePost />,
+        },
       ],
     },
   ]);
@@ -43,7 +51,6 @@ const App = () => {
           <RouterProvider router={router} />
         </ChakraProvider>
       </UseContextProvider>
-    
     </React.StrictMode>
   );
 };

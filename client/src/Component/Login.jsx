@@ -58,7 +58,7 @@ const Login = () => {
         setTimeout(() => {
           localStorage.removeItem("jwtToken");
           window.location.reload();
-        }, 1 * 60 * 1000);
+        }, 20 * 60 * 1000);
 
         toast({
           title: "Login Successfully",

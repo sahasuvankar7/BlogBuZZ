@@ -1,11 +1,14 @@
 const model = require("../models/user");
+const modelPost = require("../models/post");
 const jwt = require("jsonwebtoken");
-
 const bcrypt = require("bcrypt");
 const saltRounds = 10;
 const secret = "adfj3k3r383j389jdsfjj383";
 
 const User = model.User;
+const Post = modelPost.Post;
+
+
 
 //REGISTER
 
@@ -53,13 +56,9 @@ exports.retrieveAccount = async (req, res) => {
     // jwt pattern follow this link : https://www.npmjs.com/package/jsonwebtoken
     const token = jwt.sign(
       { id: user._id, name: user.name, email: user.email },
-      secret,
-      {
-        expiresIn: "2m",
-      }
+      secret
     );
-    const { password, ...info } = user._doc;
-    console.log("hello");
+
     res
       .cookie("jwttoken", token, {
         httpOnly: true,
@@ -95,17 +94,50 @@ exports.userLogout = async (req, res) => {
 };
 
 // Fetching DATA
-exports.refetch =  (req, res) => {
-const token = req.query.token;
+exports.refetch = (req, res) => {
+  const token = req.query.token;
   console.log(token);
-  if(token){
+  if (token) {
     jwt.verify(token, secret, (err, data) => {
-     if (err) {
-       res.status(403).json(err);
-     }
-     res.status(200).json(data);
-   });
-  }else {
+      if (err) {
+        res.status(403).json(err);
+      }
+      res.status(200).json(data);
+    });
+  } else {
     res.status(400).json({ message: "needs to login first" });
   }
 };
+
+// // creating new post
+exports.createPost = async (req, res) => {
+ 
+
+  const {path} = req.file;
+  console.log(path)
+  const lastSeparatorIndex = path.lastIndexOf('\\') !== -1 ? path.lastIndexOf('\\') : path.lastIndexOf('/');
+  const newPath = path.slice(lastSeparatorIndex + 1);
+ console.log(newPath)
+  // creating post
+  const { title, summary, content} = req.body;
+ const postDoc = await Post.create({
+    title,
+    summary,
+    content,
+    cover:newPath,
+  });
+  console.log(postDoc);
+  res.status(200).json(postDoc);
+};
+
+// updating post
+
+exports.updatePost = (req, res) => {
+  res.status(200).json("hello");
+};
+
+// fetching the post
+
+exports.fetchPost = async (req,res)=>{
+  res.json(await Post.find());
+}
